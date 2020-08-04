@@ -99,9 +99,9 @@ class User {
         }
 
         const userApps = await db.query(
-            `SELECT a.id, a.category, a.event, a.amout 
+            `SELECT a.id, a.category, a.event, a.amount, a.status 
            FROM applications AS a
-           WHERE a.username = $1`,
+           WHERE a.applicant = $1`,
             [username]);
 
         user.applications = userApps.rows

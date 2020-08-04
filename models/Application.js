@@ -20,7 +20,12 @@ class Application {
             whereExpressions.push(`status = $${queryValues.length}}`)
         }
 
-        let finalQuery = baseQuery + whereExpressions.join('AND') + 'ORDER BY submitted_at'
+        if (whereExpressions.length > 0) {
+            baseQuery += " WHERE ";
+        }
+
+        let finalQuery = baseQuery + whereExpressions.join('AND') + ' ORDER BY submitted_at'
+        console.log(finalQuery)
         const applicationsRes = await db.query(finalQuery, queryValues)
         return applicationsRes.rows
     }
@@ -38,7 +43,7 @@ class Application {
             throw error;
         }
 
-        const votesRes = await db.query(`SELECT * FROM votes WHERE application_id = $1`, [id])
+        const votesRes = await db.query(`SELECT vote, voter FROM votes WHERE application_id = $1`, [id])
 
         application.votes = votesRes.rows
 
@@ -46,11 +51,13 @@ class Application {
     }
 
     /** Create an application (from data), update db, return app info */
-    static async create(data) {
+    static async create(applicant, data) {
+
+
         const result = await db.query(
             `INSERT INTO applications
             (category, event, event_date, amount, budget, applicant, description) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`
-            , [data.category, data.event, data.event_date, data.amount, data.budget, data.applicant, data.description])
+            , [data.category, data.event, data.event_date, data.amount, data.budget, applicant, data.description])
 
         return result.rows[0]
     }
@@ -84,6 +91,19 @@ class Application {
         return application;
     }
 
+    /** Vote for an application */
+    static async vote(id, username, vote) {
+        const result = await db.query('INSERT INTO votes (application_id, voter, vote) VALUES ($1, $2, $3) RETURNING *', [id, username, vote])
+        const updatedVote = result.rows[0]
+        return updatedVote
+    }
+
+    /** Change vote */
+    static async changeVote(id, username, vote) {
+        const result = await db.query(`UPDATE votes SET vote = $1 WHERE application_id = $2 AND voter = $3 RETURNING *`, [vote, id, username])
+        return result.rows[0]
+    }
+
     /** Delete an application from database */
     static async remove(id) {
         const result = await db.query(
@@ -99,3 +119,5 @@ class Application {
         return true
     }
 }
+
+module.exports = Application

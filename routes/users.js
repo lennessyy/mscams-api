@@ -6,9 +6,9 @@ const router = express.Router();
 // const { ensureCorrectUser, authRequired } = require("../middleware/auth");
 
 const User = require("../models/User");
-// const { validate } = require("jsonschema");
+const { validate } = require("jsonschema");
 
-// const { userNewSchema, userUpdateSchema } = require("../schemas");
+const { userNewSchema, userUpdateSchema } = require("../schemas");
 
 const createToken = require("../helpers/createToken");
 
@@ -38,14 +38,14 @@ router.get('/:username', async function (req, res, next) {
 router.post("/", async function (req, res, next) {
     try {
         delete req.body._token;
-        // const validation = validate(req.body, userNewSchema);
+        const validation = validate(req.body, userNewSchema);
 
-        // if (!validation.valid) {
-        //     return next({
-        //         status: 400,
-        //         message: validation.errors.map(e => e.stack)
-        //     });
-        // }
+        if (!validation.valid) {
+            return next({
+                status: 400,
+                message: validation.errors.map(e => e.stack)
+            });
+        }
 
         const newUser = await User.register(req.body);
         const token = createToken(newUser);

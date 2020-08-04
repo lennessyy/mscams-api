@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "category": "pdf",
+            "event": "GALA",
+            "event_date": "09/20/2020",
+            "amount": 350,
+            "description": "Biggest conference for localization professionals",
+            "budget": "Airfare: $200; Accomodation: $200 ",
+            "applicant": "lennessy"
+        }
+    ],
+    "required": [],
+    "properties": {
+        "category": {
+            "$id": "#/properties/category",
+            "type": "string",
+            "title": "The category schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "pdf"
+            ],
+            "enum": [
+                "club",
+                "pdf"
+            ]
+        },
+        "event": {
+            "$id": "#/properties/event",
+            "type": "string",
+            "title": "The event schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "GALA"
+            ]
+        },
+        "event_date": {
+            "$id": "#/properties/event_date",
+            "type": "string",
+            "title": "The event_date schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "09/20/2020"
+            ]
+        },
+        "amount": {
+            "$id": "#/properties/amount",
+            "type": "integer",
+            "title": "The amount schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                350
+            ]
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "The description schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Biggest conference for localization professionals"
+            ]
+        },
+        "budget": {
+            "$id": "#/properties/budget",
+            "type": "string",
+            "title": "The budget schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Airfare: $200; Accomodation: $200 "
+            ]
+        }
+    },
+    "additionalProperties": true
+}

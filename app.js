@@ -13,6 +13,7 @@ const authRoutes = require("./routes/auth");
 
 app.use("/users", usersRoutes);
 app.use('/', authRoutes)
+app.use('/applications', applicationsRoutes)
 
 /** 404 handler */
 

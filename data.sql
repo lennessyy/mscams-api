@@ -27,8 +27,8 @@ CREATE TABLE public.applications(
 );
 
 CREATE TABLE public.votes(
-    id SERIAL PRIMARY KEY,
     application_id integer REFERENCES applications(id),
     vote boolean NOT NULL,
-    voter text REFERENCES users(username)
+    voter text REFERENCES users(username),
+    PRIMARY KEY (application_id, voter)
 );
