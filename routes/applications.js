@@ -46,6 +46,19 @@ router.post('/:id/vote', adminRequired, async function (req, res, next) {
     }
 })
 
+/** PUT /:id/vote to change a vote  */
+router.put('/:id/vote', adminRequired, async function (req, res, next) {
+    try {
+        const id = req.params.id
+        const voter = req.username
+        const vote = req.body.vote
+        const voted = await Application.changeVote(id, voter, vote)
+        return res.json({ voted })
+    } catch (err) {
+        return next(err)
+    }
+})
+
 // POST / create application
 router.post('/', authRequired, async function (req, res, next) {
     try {
@@ -61,6 +74,20 @@ router.post('/', authRequired, async function (req, res, next) {
         }
 
         const applicant = req.username
+        const applicantCategory = req.userCategory
+
+        if (req.body.category === 'club' && applicantCategory !== 'club') {
+            const err = new Error('Must be a club account to apply for club funding')
+            err.status = 400
+            throw err
+        }
+
+        if (req.body.category === 'pdf' && applicantCategory === "club") {
+            const err = new Error('Must be a student to apply for PDF funding')
+            err.status = 400
+            throw err
+        }
+
         const application = await Application.create(applicant, req.body);
         return res.status(201).json({ application })
     } catch (err) {

@@ -101,6 +101,12 @@ class Application {
     /** Change vote */
     static async changeVote(id, username, vote) {
         const result = await db.query(`UPDATE votes SET vote = $1 WHERE application_id = $2 AND voter = $3 RETURNING *`, [vote, id, username])
+
+        if (!result.rows[0]) {
+            let notFound = new Error(`You have not voted`);
+            notFound.status = 404;
+            throw notFound;
+        }
         return result.rows[0]
     }
 
